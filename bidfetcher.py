@@ -49,13 +49,18 @@ def parse_html_data(html_data):
 				player['contract-number'] = tokens[2].strip()
 			elif u'Data inicio:' in p.text:
 				tokens = p.text.split(':')
-				player['contract-begin'] = datetime.strptime(tokens[1][:-len('Data termino:')].strip(), '%d/%m/%Y')
-				player['contract-end'] = datetime.strptime(tokens[2].strip(), '%d/%m/%Y')
+				dt_begin = tokens[1][:-len('Data termino:')].strip()
+				dt_end = tokens[2].strip()
+				if dt_begin:
+					player['contract-begin'] = datetime.strptime(dt_begin, '%d/%m/%Y')
+				if dt_end:
+					player['contract-end'] = datetime.strptime(dt_end, '%d/%m/%Y')
 			elif u'Nascimento:' in p.text:
 				player['birthdate'] = datetime.strptime(p.text.split(':')[-1].strip(), '%d/%m/%Y')
 			elif u'Data de Publicação:' in p.text:
-				player['contract-pub-date'] = datetime.strptime(p.text.split(':')[-1].strip(), '%d/%m/%Y %H:%M:%S')
+				player['contract-pub-date'] = datetime.strptime(p.text.split(u': ')[-1].strip(), '%d/%m/%Y %H:%M:%S')
+		team = body.find('p', class_='boxPlus')
+		player['team'] = team.text.strip()
 		players.append(player)
-	print players
 
-get_bid_data_since(datetime(2015,12,12))
+get_bid_data_since(datetime(2015,12,1))
