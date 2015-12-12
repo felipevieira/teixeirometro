@@ -1,0 +1,12 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<h1>TEIXEIRÔMETRO</h1>
+		<ul>
+			{% for t in teams %}
+			<li><a href="/{{t}}/">{{ t }}</a></li>
+			{% endfor %}
+		</ul>
+	</body>
+</html>
