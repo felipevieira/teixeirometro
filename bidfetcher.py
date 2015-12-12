@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import requests
 import time
 import ast
@@ -22,7 +25,7 @@ def bid_get_data_for_date(d):
 
 def get_bid_data_since(origin):
 	while origin <= datetime.today() :
-	    parsed_data = ast.literal_eval(bid_get_data_for_date(origin.date()).content)
+            parsed_data = bid_get_data_for_date(origin.date()).json()
 	    html_data = parsed_data["dados"]
 
 	    parse_html_data(html_data)
