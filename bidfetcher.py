@@ -6,6 +6,7 @@ import time
 import ast
 import sys
 import re
+import json
 
 from datetime import date, datetime, timedelta
 from bs4 import BeautifulSoup
@@ -24,13 +25,14 @@ def bid_get_data_for_date(d):
    return r
 
 def get_bid_data_since(origin):
-	while origin <= datetime.today() :
-            parsed_data = bid_get_data_for_date(origin.date()).json()
-	    html_data = parsed_data["dados"]
+	while origin <= datetime.today():
+		print origin.strftime('%d/%m/%Y')
+		parsed_data = bid_get_data_for_date(origin.date()).json()
+		html_data = parsed_data["dados"]
 
-	    parse_html_data(html_data)
+		parse_html_data(html_data)
 
-	    origin += timedelta(days=1)
+		origin += timedelta(days=1)
 
 def parse_html_data(html_data):
 	players = []
@@ -39,6 +41,9 @@ def parse_html_data(html_data):
 	player_entries = soup.find_all("div", class_="modal-content")
 	for player_entry in player_entries:
                 player = {}
+                player['name'] = player_entry.find_all("h4")[0].text
+                player['picture'] = player_entry.find_all("img")[0]["src"]
+                player['badge'] = player_entry.find_all("img")[1]["src"]
 		body = player_entry.find("div", class_="modal-body")
 		for p in body.find_all("p"):
 			if u'Inscrição:' in p.text:
@@ -52,15 +57,25 @@ def parse_html_data(html_data):
 				dt_begin = tokens[1][:-len('Data termino:')].strip()
 				dt_end = tokens[2].strip()
 				if dt_begin:
-					player['contract-begin'] = datetime.strptime(dt_begin, '%d/%m/%Y')
+					player['contract-begin'] = datetime.strptime(dt_begin, '%d/%m/%Y').strftime('%d/%m/%Y')
 				if dt_end:
-					player['contract-end'] = datetime.strptime(dt_end, '%d/%m/%Y')
+					player['contract-end'] = datetime.strptime(dt_end, '%d/%m/%Y').strftime('%d/%m/%Y')
 			elif u'Nascimento:' in p.text:
-				player['birthdate'] = datetime.strptime(p.text.split(':')[-1].strip(), '%d/%m/%Y')
+				try:
+					player['birthdate'] = datetime.strptime(p.text.split(':')[-1].strip(), '%d/%m/%Y').strftime('%d/%m/%Y')
+				except:
+					player['birthdate'] = None
 			elif u'Data de Publicação:' in p.text:
-				player['contract-pub-date'] = datetime.strptime(p.text.split(u': ')[-1].strip(), '%d/%m/%Y %H:%M:%S')
+				player['contract-pub-date'] = datetime.strptime(p.text.split(u': ')[-1].strip(), '%d/%m/%Y %H:%M:%S').strftime('%d/%m/%Y')
 		team = body.find('p', class_='boxPlus')
 		player['team'] = team.text.strip()
 		players.append(player)
 
-get_bid_data_since(datetime(2015,12,1))
+	write_players_to_file(players)
+
+def write_players_to_file(players):
+	with open('dataset.json', 'a') as f:
+		for player in players:
+			f.write("%s\n" % json.dumps(player))
+
+get_bid_data_since(datetime(2015,01,01))
