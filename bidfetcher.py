@@ -33,9 +33,29 @@ def get_bid_data_since(origin):
 	    origin += timedelta(days=1)
 
 def parse_html_data(html_data):
+	players = []
+
 	soup = BeautifulSoup(html_data, 'html.parser')
 	player_entries = soup.find_all("div", class_="modal-content")
 	for player_entry in player_entries:
-		print player_entry.prettify()	
+                player = {}
+		body = player_entry.find("div", class_="modal-body")
+		for p in body.find_all("p"):
+			if u'Inscrição:' in p.text:
+				player['reg_id'] = int(p.text[len('Inscrição')])
+			elif u'Tipo Contrato:' in p.text:
+				tokens = p.text.split(':')
+				player['contract-type'] = tokens[1][:-2].strip()
+				player['contract-number'] = tokens[2].strip()
+			elif u'Data inicio:' in p.text:
+				tokens = p.text.split(':')
+				player['contract-begin'] = datetime.strptime(tokens[1][:-len('Data termino:')].strip(), '%d/%m/%Y')
+				player['contract-end'] = datetime.strptime(tokens[2].strip(), '%d/%m/%Y')
+			elif u'Nascimento:' in p.text:
+				player['birthdate'] = datetime.strptime(p.text.split(':')[-1].strip(), '%d/%m/%Y')
+			elif u'Data de Publicação:' in p.text:
+				player['contract-pub-date'] = datetime.strptime(p.text.split(':')[-1].strip(), '%d/%m/%Y %H:%M:%S')
+		players.append(player)
+	print players
 
 get_bid_data_since(datetime(2015,12,12))
