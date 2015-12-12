@@ -1,8 +1,11 @@
 import requests
 import time
 import ast
+import sys
+import re
 
 from datetime import date, datetime, timedelta
+from bs4 import BeautifulSoup
 
 BID_URL = 'http://bid.cbf.com.br'
 BID_REQ_URL = 'http://bid.cbf.com.br/a/bid/carregar/json/'
@@ -18,7 +21,7 @@ def bid_get_data_for_date(d):
    return r
 
 def get_bid_data_since(origin):
-	while origin <= datetime.today():
+	while origin <= datetime.today() :
 	    parsed_data = ast.literal_eval(bid_get_data_for_date(origin.date()).content)
 	    html_data = parsed_data["dados"]
 
@@ -27,6 +30,9 @@ def get_bid_data_since(origin):
 	    origin += timedelta(days=1)
 
 def parse_html_data(html_data):
-	pass
+	soup = BeautifulSoup(html_data, 'html.parser')
+	player_entries = soup.find_all("div", class_="modal-content")
+	for player_entry in player_entries:
+		print player_entry.prettify()	
 
 get_bid_data_since(datetime(2015,12,12))
