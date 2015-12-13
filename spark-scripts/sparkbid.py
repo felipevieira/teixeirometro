@@ -35,9 +35,19 @@ def parse_player_data(d):
         print d
         raise
 
+def to_csv(outputfile, data, fields):
+    with open(outputfile, 'wb') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerow(fields)
+        for x in data:
+            writer.writerow([getattr(x, f) for f in fields])
+
 def get_date(value):
   if value:
     return datetime.strptime(value, '%d/%m/%Y')
+
+def clean_contracts(d):
+    return d.filter(lambda x: x.contract_type in CONTRACT_TYPES).filter(lambda x: x.contract_end >= x.contract_begin)
 
 def load_data(path):
     sc = SparkContext()
