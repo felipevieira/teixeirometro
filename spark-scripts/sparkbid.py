@@ -14,6 +14,7 @@ from datetime import datetime
 from winners_contracts import *
 
 CONTRACT_TYPES = [u'Contrato Definitivo', u'Prorrogacao', u'Contrato Rescindido', u'Prorrogação e Alteração Salarial', u'Rescisão', u'Renovação', u'Contrato encerrado']
+CONTRACT_RECISION_TYPES = [u'Contrato Rescindido', u'Rescisão']
 
 def parse_player_data(d):
     try:
