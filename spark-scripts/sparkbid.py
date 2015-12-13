@@ -58,8 +58,8 @@ def write_dict_to_csv(my_dict, filename):
   for key, value in my_dict.items():
      writer.writerow([key, value])
 
-WINNERS = ["Corinthians / SP", "Atlético / MG", "São Paulo / SP", "Santos/ SP"]
-LOOSERS = ["Joinville / SC", "Vasco da Gama", "Avaí / SC", "Goiás / GO", "Figueirense / SC"]
+WINNERS = ["Corinthians / SP", "Atlético / MG", "São Paulo / SP", "Santos / SP"]
+LOOSERS = ["Joinville / SC", "Vasco da Gama / RJ", "Avaí / SC", "Goiás / GO", "Figueirense / SC"]
 
 if __name__ == '__main__':
     data = load_data("../dataset-cleaned.json").cache()
