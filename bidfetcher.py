@@ -44,6 +44,7 @@ def parse_html_data(html_data):
                 player['name'] = player_entry.find_all("h4")[0].text
                 player['picture'] = player_entry.find_all("img")[0]["src"]
                 player['badge'] = player_entry.find_all("img")[1]["src"]
+                player['team_id'] = player['badge'].split("/")[len(player['badge'].split("/")) - 2]
 		body = player_entry.find("div", class_="modal-body")
 		for p in body.find_all("p"):
 			if u'Inscrição:' in p.text:
@@ -68,7 +69,7 @@ def parse_html_data(html_data):
 			elif u'Data de Publicação:' in p.text:
 				player['contract-pub-date'] = datetime.strptime(p.text.split(u': ')[-1].strip(), '%d/%m/%Y %H:%M:%S').strftime('%d/%m/%Y')
 		team = body.find('p', class_='boxPlus')
-		player['team'] = team.text.strip()
+		player['team'] = team.text.strip()		
 		players.append(player)
 
 	write_players_to_file(players)
