@@ -25,7 +25,7 @@ def parse_player_data(d):
                team_id=parsed_d['team_id'],
                badge=parsed_d['badge'],
                reg_id=parsed_d['reg_id'],
-               contract_type=parsed_d['contract-type'],
+               contract_type=parsed_d['contract-type'].encode("utf-8"),
                contract_number=parsed_d['contract-number'],
                contract_begin=get_date(parsed_d.get('contract-begin', None)),
                contract_end=get_date(parsed_d.get('contract-end', None)),
