@@ -6,17 +6,17 @@ import sys
 import operator
 
 def rank_teams_most_contracts(d):
-    x = d.filter(lambda x: x.contract_type == 'Contrato Definitivo').map(lambda x: x.team).countByValue()
+    x = d.filter(lambda x: x.contract_type == 'Contrato Definitivo').map(lambda x: x.team_id).countByValue()
     x = sorted(x.iteritems(), key=operator.itemgetter(1))
     return x
 
 def rank_teams_most_rescision(d):
-    x = d.filter(lambda x: x.contract_type in sparkbid.CONTRACT_RECISION_TYPES).map(lambda x: x.team).countByValue()
+    x = d.filter(lambda x: x.contract_type in sparkbid.CONTRACT_RECISION_TYPES).map(lambda x: x.team_id).countByValue()
     x = sorted(x.iteritems(), key=operator.itemgetter(1))
     return x
 
 def list_contratos(d, t):
-    x = d.filter(lambda x: x.contract_type == 'Contrato Definitivo').filter(lambda x: x.team == t).collect()
+    x = d.filter(lambda x: x.contract_type == 'Contrato Definitivo').filter(lambda x: x.team_id == t).collect()
     for i in x:
         print i
 
