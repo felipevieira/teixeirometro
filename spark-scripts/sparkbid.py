@@ -28,7 +28,7 @@ def parse_player_data(d):
                reg_id=parsed_d['reg_id'],
                contract_type=parsed_d['contract-type'],
                contract_number=parsed_d['contract-number'],
-               contract_begin=get_date(parsed_d.get('contract-begin',None)),
+               contract_begin=get_date(parsed_d.get('contract-begin', None)),
                contract_end=get_date(parsed_d.get('contract-end', None)),
                contract_pub_date=get_date(parsed_d['contract-pub-date']),
                )
@@ -48,12 +48,12 @@ def load_data(path):
     data = sc.textFile(path).map(parse_player_data)
     return clean_contracts(data)
 
-WINNERS = ["Corinthians", "Internacional", "São Paulo / SP", "Atlético / MG", "Santos / SP"]
+WINNERS = ["Cruzeiro / MG"]
 LOOSERS = ["Joinville / SC", "Vasco da Gama", "Avaí / SC", "Goiás / GO", "Figueirense / SC"]
 
 if __name__ == '__main__':
     data = load_data("../dataset.json")
-    print get_statistics(data, LOOSERS, 2015)
+    print get_statistics(data, WINNERS, 2014)
     #print 'Contract types: ======================================'
     #print data.map(lambda x: x.contract_type).distinct().collect()
     #print '======================================================'

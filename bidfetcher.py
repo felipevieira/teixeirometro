@@ -79,4 +79,4 @@ def write_players_to_file(players):
 		for player in players:
 			f.write("%s\n" % json.dumps(player))
 
-get_bid_data_since(datetime(2015,01,01))
+get_bid_data_since(datetime(2014,01,01))
